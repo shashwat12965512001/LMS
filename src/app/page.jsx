@@ -1,5 +1,28 @@
 "use client";
+import { useRouter } from "next/navigation"; // for client-side navigation
+import { useState } from "react";
+
 export default function Home() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    
+    // Simulate fetching user role based on login (replace this with real authentication logic)
+    const userRole = await fakeLoginApi(email, password); // Assume this returns "student", "teacher", or "admin"
+
+    // Redirect based on role
+    if (userRole === "student") {
+      router.push("/dashboard/student");
+    } else if (userRole === "teacher") {
+      router.push("/dashboard/teacher");
+    } else if (userRole === "admin") {
+      router.push("/dashboard/admin");
+    }
+  };
+
   return (
     <>
       <section>
@@ -12,14 +35,15 @@ export default function Home() {
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                 Login
               </h1>
-              <form className="space-y-4 md:space-y-6" onSubmit="">
+              <form className="space-y-4 md:space-y-6" onSubmit={handleLogin}>
                 <div>
                   <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Username</label>
                   <input
                     type="email"
                     name="email"
                     id="email"
-                    onChange={(e) => ""}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     placeholder="user@example.com"
                     required
@@ -31,7 +55,8 @@ export default function Home() {
                     type="password"
                     name="password"
                     id="password"
-                    onChange={(e) => ""}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     required
@@ -55,4 +80,10 @@ export default function Home() {
       </section>
     </>
   );
+}
+
+// Mock API function for login (replace with actual API call)
+async function fakeLoginApi(email, password) {
+  // Simulate API response
+  return "student"; // Change this to "teacher" or "admin" for testing
 }
